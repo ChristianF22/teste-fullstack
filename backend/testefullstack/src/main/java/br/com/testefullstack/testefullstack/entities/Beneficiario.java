@@ -2,6 +2,9 @@ package br.com.testefullstack.testefullstack.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "beneficiario")
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class Beneficiario {
 
     @Id
@@ -30,9 +34,11 @@ public class Beneficiario {
     @JoinColumn(name = "id_plano", nullable = false, foreignKey = @ForeignKey(name = "fk_beneficiario_plano"))
     private Plano plano;
 
+    @CreatedDate
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
 
+    @LastModifiedDate
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 

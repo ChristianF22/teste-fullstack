@@ -73,12 +73,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Spring Security (desativado por enquanto)
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        -->
+
 
 		<!-- Testes -->
 		<dependency>

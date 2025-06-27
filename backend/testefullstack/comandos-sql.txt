@@ -1,0 +1,31 @@
+CREATE TABLE usuario (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  login VARCHAR(15) NOT NULL UNIQUE,
+  senha VARCHAR(500) NOT NULL,
+  nome VARCHAR(60) NOT NULL,
+  roles TEXT
+);
+
+CREATE TABLE plano (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  valor DECIMAL(10, 2) NOT NULL,
+  data_cadastro TIMESTAMP NULL,
+  data_atualizacao TIMESTAMP NULL,
+  id_usuario INT,
+  CONSTRAINT fk_plano_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
+
+CREATE TABLE beneficiario (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  cpf VARCHAR(14) UNIQUE NOT NULL,
+  email VARCHAR(100),
+  idade INT,
+  id_plano INT NOT NULL,
+  data_cadastro TIMESTAMP NULL,
+  data_atualizacao TIMESTAMP NULL,
+  id_usuario INT,
+  CONSTRAINT fk_beneficiario_plano FOREIGN KEY (id_plano) REFERENCES plano(id),
+  CONSTRAINT fk_beneficiario_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+);
