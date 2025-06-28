@@ -12,10 +12,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("beneficiario")
@@ -26,6 +27,7 @@ public class BeneficiarioController implements GenericController{
     private final BeneficiarioMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','ATENDENTE')")
     public ResponseEntity<Void> salvarBeneficiario(@RequestBody @Valid BeneficiarioDTO dto){
         Beneficiario beneficiario = mapper.toEntity(dto);
         service.salvar(beneficiario);
@@ -34,6 +36,7 @@ public class BeneficiarioController implements GenericController{
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','ATENDENTE')")
     public ResponseEntity<BeneficiarioDTO> obterdetalherBeneficiario(@PathVariable("id") String id){
         Integer idBeneficiario = Integer.parseInt(id);
         return service
@@ -46,6 +49,7 @@ public class BeneficiarioController implements GenericController{
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> deletarBeneficiario(@PathVariable("id") String id){
         return service.obterPorId(Integer.parseInt(id))
                 .map(beneficiario -> {
@@ -56,6 +60,7 @@ public class BeneficiarioController implements GenericController{
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN','ATENDENTE')")
     public ResponseEntity<Page<BeneficiarioDTO>> pesquisarBeneficiarios(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String cpf,
@@ -71,6 +76,7 @@ public class BeneficiarioController implements GenericController{
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','ATENDENTE')")
     public ResponseEntity<Void> atualizarBeneficiario(
             @PathVariable("id") Integer id,
             @RequestBody @Valid BeneficiarioDTO dto

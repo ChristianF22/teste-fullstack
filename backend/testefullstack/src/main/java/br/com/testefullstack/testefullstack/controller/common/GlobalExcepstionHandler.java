@@ -7,6 +7,7 @@ import br.com.testefullstack.testefullstack.exceptions.OperacaoNaoPerminitidaExc
 import br.com.testefullstack.testefullstack.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,6 +61,12 @@ public class GlobalExcepstionHandler {
         return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Ocorreu um erro inesperado. Entre em contato com a TI.",
                 List.of());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErroResposta handleAccessDeniedException(AccessDeniedException e) {
+        return new ErroResposta(HttpStatus.FORBIDDEN.value(), "Acesso negado: seu usuário não tem permissão para realizar esta operação.",List.of());
     }
 
     @ExceptionHandler(IllegalStateException.class)

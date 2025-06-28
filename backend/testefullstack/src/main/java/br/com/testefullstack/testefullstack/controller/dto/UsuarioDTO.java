@@ -10,11 +10,9 @@ public record UsuarioDTO(
 
         Integer id,
 
-        @NotBlank(message = "Login é obrigatório.")
         @Size(min = 3, max = 15, message = "Login deve ter entre 3 e 15 caracteres.")
         String login,
 
-        @NotBlank(message = "Senha é obrigatória.")
         @Size(min = 6, max = 500, message = "Senha deve ter entre 6 e 500 caracteres.")
         String senha,
 

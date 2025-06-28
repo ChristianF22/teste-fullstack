@@ -2,11 +2,13 @@ package br.com.testefullstack.testefullstack.service;
 
 import br.com.testefullstack.testefullstack.entities.Beneficiario;
 import br.com.testefullstack.testefullstack.entities.Plano;
+import br.com.testefullstack.testefullstack.entities.Usuario;
 import br.com.testefullstack.testefullstack.exceptions.PlanoNaoEncontradoException;
 import br.com.testefullstack.testefullstack.exceptions.PlanoObrigatorioException;
 import br.com.testefullstack.testefullstack.repository.BeneficiarioRepository;
 import br.com.testefullstack.testefullstack.repository.PlanoRepository;
 import br.com.testefullstack.testefullstack.repository.specification.BeneficiarioSpecification;
+import br.com.testefullstack.testefullstack.security.SecurityService;
 import br.com.testefullstack.testefullstack.validator.BeneficiarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ public class BeneficiarioService {
     private final BeneficiarioRepository repository;
     private final BeneficiarioValidator validator;
     private final PlanoRepository planoRepository;
+    private final SecurityService securityService;
 
     public Beneficiario salvar(Beneficiario beneficiario) {
         Integer idPlano = beneficiario.getPlano() != null ? beneficiario.getPlano().getId() : null;
@@ -36,11 +39,14 @@ public class BeneficiarioService {
 
         beneficiario.setPlano(plano);
         validator.validar(beneficiario);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        beneficiario.setUsuario(usuario);
         return repository.save(beneficiario);
     }
 
 
     public Optional<Beneficiario> obterPorId(Integer id){
+
         return repository.findById(id);
     }
 

@@ -3,11 +3,17 @@ package br.com.testefullstack.testefullstack.controller;
 import br.com.testefullstack.testefullstack.controller.dto.PlanoDTO;
 import br.com.testefullstack.testefullstack.controller.mapper.PlanoMapper;
 import br.com.testefullstack.testefullstack.entities.Plano;
+import br.com.testefullstack.testefullstack.entities.Usuario;
+import br.com.testefullstack.testefullstack.security.SecurityService;
 import br.com.testefullstack.testefullstack.service.PlanoService;
+import br.com.testefullstack.testefullstack.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,6 +30,7 @@ public class PlanoController implements GenericController{
     private final PlanoMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> salvarPLano(@RequestBody @Valid PlanoDTO dto){
         Plano plano = mapper.toEntity(dto);
         service.salvar(plano);
@@ -32,6 +39,7 @@ public class PlanoController implements GenericController{
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','ATENDENTE')")
     public ResponseEntity<PlanoDTO> obeterdetalhePlano(@PathVariable("id") String id) {
         Integer idPlano = Integer.parseInt(id);
         return service
@@ -44,6 +52,7 @@ public class PlanoController implements GenericController{
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deletarPlano(@PathVariable("id") String id){
         var idPlano = Integer.parseInt(id);
         Optional<Plano> planoOptional = service.obterPorid(idPlano);
@@ -55,6 +64,7 @@ public class PlanoController implements GenericController{
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','ATENDENTE')")
     public ResponseEntity<Page<PlanoDTO>> pesquisarPlano(
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
@@ -65,6 +75,7 @@ public class PlanoController implements GenericController{
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> atualizarPlano(@PathVariable("id") String id, @RequestBody @Valid PlanoDTO dto){
         var idPlano = Integer.parseInt(id);
         Optional<Plano> planoOptional = service.obterPorid(idPlano);

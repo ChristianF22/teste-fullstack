@@ -1,8 +1,10 @@
 package br.com.testefullstack.testefullstack.service;
 
 import br.com.testefullstack.testefullstack.entities.Plano;
+import br.com.testefullstack.testefullstack.entities.Usuario;
 import br.com.testefullstack.testefullstack.repository.BeneficiarioRepository;
 import br.com.testefullstack.testefullstack.repository.PlanoRepository;
+import br.com.testefullstack.testefullstack.security.SecurityService;
 import br.com.testefullstack.testefullstack.validator.PlanoValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +25,12 @@ public class PlanoService {
     private final PlanoRepository repository;
     private final PlanoValidator validator;
     private final BeneficiarioRepository beneficiarioRepository;
+    private final SecurityService securityService;
 
     public Plano salvar(Plano plano) {
         validator.validar(plano);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        plano.setUsuario(usuario);
         return repository.save(plano);
 
     }
